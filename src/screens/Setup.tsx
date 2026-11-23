@@ -16,6 +16,7 @@ const PAIR_TEXT: Record<PairState, [Check, string]> = {
   downloading: ['wait', 'Downloading…'],
   unavailable: ['no', 'Not available for this pair'],
   unsupported: ['no', 'This browser has no on-device translation (use desktop Chrome 138+ or Edge 148+)'],
+  unresponsive: ['no', 'On-device translation is not responding in this browser (use Google Chrome 138+ on a computer)'],
 };
 
 export default function Setup() {

@@ -1,5 +1,6 @@
+import { useEffect, useState } from 'react';
 import { useStore } from '../state';
-import { apiPresent } from '../platform/translator';
+import { pairState, type PairState } from '../platform/translator';
 import { asrSupported, ttsSupported } from '../platform/speech';
 import { recorderSupported } from '../platform/recorder';
 import { Btn, go } from '../ui/kit';
@@ -27,8 +28,11 @@ const EVIDENCE = [
 export default function Home() {
   const { data, openSample } = useStore();
   const own = data && !data.sample;
-  const caps: [string, boolean][] = [
-    ['On-device translation', apiPresent()],
+  const [tr, setTr] = useState<PairState | null>(null);
+  useEffect(() => { void pairState('en', 'ko').then(setTr); }, []);
+  const trText = tr === null ? 'checking…' : tr === 'available' ? 'ready here' : tr === 'downloadable' || tr === 'downloading' ? 'needs a one-time download' : 'not working in this browser';
+  const caps: [string, boolean, string?][] = [
+    ['On-device translation', tr === 'available' || tr === 'downloadable' || tr === 'downloading', trText],
     ['Speech recognition', asrSupported()],
     ['Voice recording', recorderSupported()],
     ['Reading aloud', ttsSupported()],
@@ -102,8 +106,8 @@ export default function Home() {
         <h2 id="needs">What you need</h2>
         <p>Desktop Chrome 138 or later (or Edge 148 or later) and a microphone. The tour and the sample family work in any browser.</p>
         <ul className="caps">
-          {caps.map(([label, ok]) => (
-            <li key={label} className={ok ? 'cap-ok' : 'cap-no'}>{label}: {ok ? 'available here' : 'not in this browser'}</li>
+          {caps.map(([label, ok, text]) => (
+            <li key={label} className={ok ? 'cap-ok' : 'cap-no'}>{label}: {text ?? (ok ? 'available here' : 'not in this browser')}</li>
           ))}
         </ul>
         <p className="muted">Your talks, phrases and recordings stay in this browser. There is no account. Translation runs on your device; speech recognition uses your browser’s speech service, which in Chrome means Google’s servers.</p>

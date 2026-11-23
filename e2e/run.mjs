@@ -237,6 +237,37 @@ const shot = (page, name) => page.screenshot({ path: `${SHOTS}${name}.png`, full
   await ctx.close();
 }
 
+// 2b. A browser whose Translator API exists but never answers (seen in an embedded Chromium)
+{
+  const { ctx, page, errors } = await newPage(false);
+  await ctx.addInitScript(() => {
+    window.Translator = { availability: () => new Promise(() => {}), create: () => new Promise(() => {}) };
+  });
+  await page.goto(BASE);
+  await page.getByText('On-device translation: not working in this browser').waitFor({ timeout: 10000 });
+  ok(true, 'home reports a silent translation API as not working');
+  await page.goto(BASE + '#/setup');
+  await page.getByText(/not responding in this browser/).first().waitFor({ timeout: 10000 });
+  ok(true, 'setup reports the silent API instead of hanging');
+  await page.getByLabel('Your first name').fill('Jun');
+  await page.getByLabel('What you call them').fill('Halmoni');
+  await page.getByRole('button', { name: 'Start the first talk' }).click();
+  await page.getByRole('button', { name: 'What games did you play when you were little?' }).click();
+  ok(await page.locator('.card .elder-text').innerText() === '어렸을 때 무슨 놀이를 하셨어요?', 'built-in Korean still works without translation');
+  await page.getByRole('button', { name: 'I asked it' }).click();
+  await page.getByRole('button', { name: /Type what Halmoni said instead/ }).click();
+  await page.getByLabel('Halmoni’s words, in Korean').fill('강아지를 키웠지.');
+  const t0 = Date.now();
+  await page.getByRole('button', { name: 'Add', exact: true }).click();
+  await page.getByText('No translation is available in this browser.', { exact: false }).waitFor({ timeout: 15000 });
+  ok(Date.now() - t0 < 12000, `falls back to typing the meaning within ${Date.now() - t0} ms`);
+  await page.getByLabel('Meaning (optional)').fill('I had a dog.');
+  await page.getByRole('button', { name: 'Keep it' }).click();
+  ok((await page.locator('.bubble.elder .trans').innerText()) === 'I had a dog.', 'answer kept with the typed meaning');
+  ok(errors.length === 0, `no console errors with a silent API (${errors.join(' | ')})`);
+  await ctx.close();
+}
+
 // 3. Mobile layout and a browser without the fakes
 {
   const { ctx, page, errors } = await newPage(false, { width: 390, height: 844 });

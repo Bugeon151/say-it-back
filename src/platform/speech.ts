@@ -88,7 +88,7 @@ export const speechErrorText = (code: string) =>
     'not-allowed': 'The microphone is blocked. Allow it in the browser, or type instead.',
     'service-not-allowed': 'Speech recognition is turned off in this browser. You can type instead.',
     'audio-capture': 'No microphone was found. You can type instead.',
-    network: 'Speech recognition needs an internet connection. You can type instead.',
+    network: 'Speech recognition could not reach its service. Check the connection; outside Google Chrome it often does not work. You can type instead.',
     'language-not-supported': 'This browser cannot recognise speech in that language. You can type instead.',
     unsupported: 'This browser has no speech recognition. Try desktop Chrome, or type instead.',
   })[code] ?? 'Speech recognition stopped. You can try again or type instead.';
