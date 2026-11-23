@@ -4,6 +4,8 @@
 
 Live app: https://bugeon151.github.io/say-it-back/ (desktop Chrome 138+ for live talks; the tour and sample family work in any browser)
 
+Demo video (1:52): https://youtu.be/dD51pYRWUuI
+
 Say It Back helps a grandchild talk with a grandparent who speaks another language. It translates while they talk, keeps the grandparent's words in the grandparent's own voice, and shows the grandchild a little less help each time, until the grandchild can say it without the app.
 
 Built for the CSC Winter Sparkathon 2026 (theme: technology that brings people together or helps people support one another).
@@ -68,7 +70,11 @@ There is also a storybook of every answer, with the original words, the translat
 | Only the first half | 11 | 0 | 0 |
 
 - `#/bench` in the app times Chrome's on-device translation on 26 sentences on your own computer and lets you copy the results.
-- Checked by hand in desktop Chrome 157: the on-device Translator API answers for English to Korean and Korean to English (the language pack is offered as a one-time download), and speech recognition, voice recording and reading aloud are reported as available.
+- Checked by hand in desktop Chrome 157 (details in `docs/bench-chrome-157.md`):
+  - Speech recognition, voice recording and reading aloud are reported as available.
+  - After the one-time language pack download, `#/bench` translated 26 sentences on the device: median 10 ms, 90th percentile 17 ms, slowest 44 ms.
+  - Machine translation into Korean used 당신 for "you" in 10 of 12 questions and never used the honorific verb form, which sounds rude to a grandparent. This is why the questions and lines the grandchild says are hand-written in polite Korean.
+  - This check found a bug: after one click, setup said the download had failed although both directions were installed. Chrome's `create()` uses up the click, so setup now starts one download per click and decides from what is installed. New end-to-end checks cover both cases: one pack per direction, and one pack for both.
 
 ## Privacy
 
