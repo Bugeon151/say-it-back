@@ -38,11 +38,33 @@ export default function Setup() {
   useEffect(recheck, [kidLang, elderLang]);
 
   const download = async () => {
+    setErr('');
     setProgress(0);
-    const ok = (await prepare(kidLang, elderLang, setProgress)) && (await prepare(elderLang, kidLang, setProgress));
+    const pairs = ([[kidLang, elderLang], [elderLang, kidLang]] as const).filter((_, i) => states?.[i] !== 'available');
+    let failed = false;
+    for (const [n, [from, to]] of pairs.entries()) {
+      // create() uses up the click's user activation, so the second direction can start now only if the
+      // first download covered it. It may still be finishing ("downloading"), which needs no click to wait for.
+      if (n > 0) {
+        let s = await pairState(from, to);
+        for (let i = 0; i < 120 && s === 'downloading'; i++) {
+          await new Promise((r) => setTimeout(r, 500));
+          s = await pairState(from, to);
+        }
+        if (s !== 'available') break;
+      }
+      if (!(await prepare(from, to, setProgress))) failed = true;
+    }
     setProgress(null);
-    if (!ok) setErr('The language pack could not be downloaded. Check the connection and try again.');
-    recheck();
+    const now = await Promise.all([pairState(kidLang, elderLang), pairState(elderLang, kidLang)]);
+    setStates(now);
+    if (!now.every((s) => s === 'available')) {
+      setErr(
+        failed ? 'The language pack could not be downloaded. Check the connection and try again.'
+        : now.includes('downloadable') ? 'One more download is needed. Press the button again.'
+        : 'Still downloading. Check again in a minute.',
+      );
+    }
   };
 
   const testMic = async () => {

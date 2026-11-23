@@ -268,6 +268,52 @@ const shot = (page, name) => page.screenshot({ path: `${SHOTS}${name}.png`, full
   await ctx.close();
 }
 
+// 2c. Downloading the language pack. In Chrome, create() needs a click while a model must be downloaded and
+// uses that click up; found in Chrome 157, where one click downloaded both directions but the app reported failure.
+for (const mode of ['separate', 'shared']) {
+  const { ctx, page, errors } = await newPage(false);
+  await ctx.addInitScript((mode) => {
+    const ready = new Set();
+    const busy = new Set();
+    let used = false;
+    addEventListener('pointerdown', () => { used = false; }, true);
+    const key = (o) => `${o.sourceLanguage}>${o.targetLanguage}`;
+    const back = (o) => `${o.targetLanguage}>${o.sourceLanguage}`;
+    window.Translator = {
+      availability: async (o) => (ready.has(key(o)) ? 'available' : busy.has(key(o)) ? 'downloading' : 'downloadable'),
+      create: async (o) => {
+        if (!ready.has(key(o))) {
+          if (!navigator.userActivation.isActive || used) {
+            throw new DOMException('Requires a user gesture when availability is "downloading" or "downloadable".', 'NotAllowedError');
+          }
+          used = true;
+          busy.add(key(o));
+          if (mode === 'shared') busy.add(back(o));
+          await new Promise((r) => setTimeout(r, 300));
+          ready.add(key(o));
+          busy.delete(key(o));
+          // One pack serves both directions, but the other direction finishes a little later.
+          if (mode === 'shared') setTimeout(() => { ready.add(back(o)); busy.delete(back(o)); }, 800);
+        }
+        return { translate: async (t) => t };
+      },
+    };
+  }, mode);
+  await page.goto(BASE + '#/setup');
+  await page.getByRole('button', { name: 'Download the language pack' }).click();
+  const notes = () => page.locator('.check-note').allInnerTexts();
+  if (mode === 'separate') {
+    await page.getByText('One more download is needed. Press the button again.').waitFor({ timeout: 10000 });
+    ok((await notes()).slice(0, 2).join('|') === 'Ready on this device|Needs a one-time download', 'separate packs: first direction ready, second asks for one more click');
+    await page.getByRole('button', { name: 'Download the language pack' }).click();
+  }
+  await page.waitForFunction(() => [...document.querySelectorAll('.check')].slice(0, 2).every((li) => li.classList.contains('check-ok')) && !document.body.innerText.includes('Downloading'), null, { timeout: 15000 });
+  ok((await notes()).slice(0, 2).join('|') === 'Ready on this device|Ready on this device', `${mode} pack: both directions ready`);
+  ok(!(await page.getByText(/could not be downloaded|One more download|Still downloading/).count()), `${mode} pack: no warning left after a successful download`);
+  ok(errors.length === 0, `no console errors while downloading (${mode}) (${errors.join(' | ')})`);
+  await ctx.close();
+}
+
 // 3. Mobile layout and a browser without the fakes
 {
   const { ctx, page, errors } = await newPage(false, { width: 390, height: 844 });
