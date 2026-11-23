@@ -10,8 +10,13 @@ let dbp: Promise<IDBDatabase | null> | null = null;
 function db(): Promise<IDBDatabase | null> {
   if (dbp) return dbp;
   dbp = new Promise((res) => {
-    if (typeof indexedDB === 'undefined') return res(null);
-    const req = indexedDB.open(DB, 1);
+    let req: IDBOpenDBRequest;
+    try {
+      if (typeof indexedDB === 'undefined') return res(null);
+      req = indexedDB.open(DB, 1);
+    } catch {
+      return res(null); // storage blocked (e.g. a sandboxed frame): keep data in memory
+    }
     req.onupgradeneeded = () => {
       req.result.createObjectStore(KV);
       req.result.createObjectStore(AUDIO);

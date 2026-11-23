@@ -14,7 +14,8 @@
   --marker: #f4d35e;
   --warn: #fff3d1;
   --danger: #a12c2c;
-  --display: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
+  /* Atkinson Hyperlegible Next: drawn for readers with low vision, because one of the two people at the screen is a grandparent. */
+  --display: 'Atkinson Hyperlegible Next Variable', ui-sans-serif, system-ui, sans-serif;
   --script: system-ui, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Noto Sans', sans-serif;
   --r: 14px;
   font-size: 112.5%;
@@ -22,7 +23,7 @@
 }
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--display); font-optical-sizing: auto; line-height: 1.5; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--display); line-height: 1.5; }
 h1, h2, h3 { line-height: 1.12; margin: 0 0 0.5em; letter-spacing: -0.01em; }
 h1 { font-size: clamp(1.9rem, 3.6vw, 2.6rem); font-weight: 700; }
 h2 { font-size: 1.4rem; font-weight: 650; }
@@ -83,7 +84,7 @@ a { color: var(--jade); text-underline-offset: 3px; }
 /* Home */
 .home { max-width: 1240px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.5rem) 3rem; }
 .hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(1.5rem, 4vw, 4rem); align-items: center; padding: clamp(1.5rem, 5vw, 4rem) 0 3rem; }
-.hero h1 { font-size: clamp(2.6rem, 6.2vw, 4.6rem); line-height: 0.98; letter-spacing: -0.03em; font-weight: 760; max-width: 12ch; }
+.hero h1 { font-size: clamp(2.6rem, 6.2vw, 4.6rem); line-height: 1; letter-spacing: -0.025em; font-weight: 800; max-width: 12ch; text-wrap: balance; }
 .fade-demo { margin: 0; }
 .fade-card { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: clamp(1.25rem, 3vw, 2rem); min-height: 300px; display: flex; flex-direction: column; gap: 0.4rem; box-shadow: 0 1px 0 var(--line), 0 18px 40px -28px rgba(14, 94, 87, 0.45); }
 .fade-prompt { color: var(--violet); font-weight: 650; font-size: 1.1rem; margin: 0; }
