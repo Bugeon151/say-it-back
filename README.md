@@ -68,6 +68,7 @@ There is also a storybook of every answer, with the original words, the translat
 | Only the first half | 11 | 0 | 0 |
 
 - `#/bench` in the app times Chrome's on-device translation on 26 sentences on your own computer and lets you copy the results.
+- Checked by hand in desktop Chrome 157: the on-device Translator API answers for English to Korean and Korean to English (the language pack is offered as a one-time download), and speech recognition, voice recording and reading aloud are reported as available.
 
 ## Privacy
 
