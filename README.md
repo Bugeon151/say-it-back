@@ -4,7 +4,7 @@
 
 Live app: https://bugeon151.github.io/say-it-back/ (desktop Chrome 138+ for live talks; the tour and sample family work in any browser)
 
-Demo video (1:52): https://youtu.be/dD51pYRWUuI
+Demo video (1:54, narrated): https://youtu.be/OxZhgA81XxM
 
 Say It Back helps a grandchild talk with a grandparent who speaks another language. It translates while they talk, keeps the grandparent's words in the grandparent's own voice, and shows the grandchild a little less help each time, until the grandchild can say it without the app.
 
