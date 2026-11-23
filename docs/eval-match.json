@@ -1,0 +1,83 @@
+{
+  "note": "Synthetic text pairs, not recordings. Measures the scoring function only, not speech recognition accuracy.",
+  "thresholds": {
+    "match": 0.8,
+    "close": 0.6
+  },
+  "acceptReformattedOrOneSlip": 1,
+  "falseMatchOtherLine": 0,
+  "table": [
+    {
+      "group": "reformatted",
+      "n": 36,
+      "match": 36,
+      "close": 0,
+      "miss": 0,
+      "meanScore": 1
+    },
+    {
+      "group": "one slip",
+      "n": 125,
+      "match": 125,
+      "close": 0,
+      "miss": 0,
+      "meanScore": 0.94
+    },
+    {
+      "group": "two slips",
+      "n": 72,
+      "match": 60,
+      "close": 12,
+      "miss": 0,
+      "meanScore": 0.856
+    },
+    {
+      "group": "other line",
+      "n": 420,
+      "match": 0,
+      "close": 21,
+      "miss": 399,
+      "meanScore": 0.316
+    },
+    {
+      "group": "first half",
+      "n": 11,
+      "match": 0,
+      "close": 3,
+      "miss": 8,
+      "meanScore": 0.54
+    }
+  ],
+  "ablationSyllableLevel": [
+    {
+      "group": "reformatted",
+      "n": 36,
+      "matchJamo": 36,
+      "matchSyllable": 36
+    },
+    {
+      "group": "one slip",
+      "n": 125,
+      "matchJamo": 125,
+      "matchSyllable": 113
+    },
+    {
+      "group": "two slips",
+      "n": 72,
+      "matchJamo": 60,
+      "matchSyllable": 25
+    },
+    {
+      "group": "other line",
+      "n": 420,
+      "matchJamo": 0,
+      "matchSyllable": 0
+    },
+    {
+      "group": "first half",
+      "n": 11,
+      "matchJamo": 0,
+      "matchSyllable": 0
+    }
+  ]
+}
