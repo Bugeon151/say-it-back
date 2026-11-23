@@ -8,6 +8,12 @@ Say It Back helps a grandchild talk with a grandparent who speaks another langua
 
 Built for the CSC Winter Sparkathon 2026 (theme: technology that brings people together or helps people support one another).
 
+| Talk side by side | The help fades |
+|---|---|
+| ![Talk screen: the grandchild says a line in Korean, the grandparent's answer is translated, and the grandparent decides if it was right](docs/screenshots/talk.png) | ![The same line over four talks: full line, then a hint, then from memory](docs/screenshots/help-fades.png) |
+| **Progress** | **Home** |
+| ![Progress for the fictional sample family: lines said without reading and answers understood without the translation](docs/screenshots/progress.png) | ![Home page](docs/screenshots/home.png) |
+
 ## The problem
 
 - One in four children in the United States has at least one immigrant parent (Migration Policy Institute, 26% of children, 2017 data).
@@ -49,8 +55,8 @@ There is also a storybook of every answer, with the original words, the translat
 
 ## Evaluation
 
-- `npm test`: 43 unit tests (scoring, fading schedule, romanisation, measures, follow-ups, line extraction).
-- `npm run e2e`: 40 checks in real Chrome covering the tour, the sample family, a full first and second talk, keeping words with a recorded voice, practice, listening mode, persistence after reload, the phone layout and a browser without the fakes. Translation and speech recognition are replaced by scripted fakes because the real ones need Google's model download and speech servers.
+- `npm test`: 47 unit tests (scoring, fading schedule, romanisation, measures, follow-ups, line extraction, and translation time limits and fallbacks).
+- `npm run e2e`: 46 checks in real Chrome covering the tour, the sample family, a full first and second talk, keeping words with a recorded voice, practice, listening mode, persistence after reload, the phone layout, a browser without the fakes and a browser whose translation API never answers. Translation and speech recognition are replaced by scripted fakes because the real ones need Google's model download and speech servers.
 - `npx vite-node scripts/eval-match.ts`: the pronunciation score on 664 synthetic Korean text pairs (results in `docs/eval-match.json`). These are text pairs, not recordings, so they test the scoring, not speech recognition.
 
 | Pairs | n | Accepted (letter level) | Accepted (syllable level) |
